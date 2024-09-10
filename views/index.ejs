@@ -1,0 +1,63 @@
+<%- include('components/html-head.ejs') %>
+
+    <div class="bg-gray-50">
+        <!-- Navbar -->
+        <nav class="bg-white shadow">
+            <div class="container mx-auto px-6 py-3">
+                <div class="flex justify-between items-center">
+                    <!-- Logo/Brand -->
+                    <a href="#" class="p-5 text-gray-900 text-xl font-bold"></a>
+                    <div class="md:hidden">
+                        <button class="text-gray-900 focus:outline-none">
+                            <!-- Icon for the mobile menu -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16m-7 6h7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <section id="banner" class="container mx-auto p-6">
+            <div class="flex justify-center p-10">
+                <h1 class="font-semibold text-4xl">Youtube Subscriber Count</h1>
+                <!-- <p>UCtxD0x6AuNNqdXO9Wp5GHew</p> -->
+            </div>
+
+            <!-- First Row: Textarea for Cookies and Button -->
+            <div class="flex flex-col sm:flex-row items-start justify-between mb-6">
+                <textarea id="cookiesTextarea"
+                    class="w-full sm:w-3/4 p-3 border rounded-lg text-gray-900 focus:outline-none focus:ring focus:ring-blue-300"
+                    rows="4" placeholder="Enter User Id..."></textarea>
+                <button id="submitBtn"
+                    class="mt-4 sm:mt-0 sm:ml-4 px-10 py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 focus:outline-none focus:ring focus:ring-blue-300">
+                    Continue
+                </button>
+
+            </div>
+
+            <div id="errorMessage" class="hidden text-red-500 font-semibold py-3"></div>
+            <!-- Error Message -->
+            <!-- Second Row: Textarea with Fixed Height -->
+
+        </section>
+    </div>
+
+    <%- include('components/html-tail.ejs') %>
+
+        <script>
+            document.getElementById('submitBtn').addEventListener('click', function () {
+                const cookies = document.getElementById('cookiesTextarea').value;
+                const errorMessage = document.getElementById('errorMessage');
+                if (!cookies) {
+                    errorMessage.textContent = 'Please provide User ID.';
+                    errorMessage.classList.remove('hidden');
+                } else {
+                    localStorage.setItem('cookies', cookies);
+                    window.location.href = '/listing';
+                }
+            });
+        </script>

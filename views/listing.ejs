@@ -1,0 +1,270 @@
+<%- include('components/html-head.ejs') %>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            /* Padding on the sides */
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 400px;
+            /* Adjust height as needed */
+            padding: 2rem;
+            /* Padding on all sides */
+        }
+    </style>
+    <div class="bg-white w-full">
+        <nav class="bg-white p-4 shadow ">
+            <div class="container mx-auto px-6 py-3">
+                <div class="img-container">
+                    <img class="responsive-img" style="width: 80px;"
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Logo_of_YouTube_%282013-2015%29.svg/2560px-Logo_of_YouTube_%282013-2015%29.svg.png" />
+                </div>
+
+                <div class="flex justify-between items-start">
+                    <div class="md:hidden">
+                        <button class="text-gray-900 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16m-7 6h7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="p-5"></div>
+        <section class="container mx-auto px-6 py-3">
+            <div class="mb-6">
+                <h1 class="text-center text-3xl font-semibold mb-4">Live Subscriber Count</h1>
+                <div id="subscriber-count" class="text-center text-xl hidden font-semibold">Loading...</div>
+                <div class="p-2"></div>
+            </div>
+        </section>
+        <section class="container flex justify-center w-full">
+            <div class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+                <div class="flex justify-between">
+                    <div>
+                        <h5 id="subscriber-count2"
+                            class="leading-none text-3xl font-bold text-gray-900 dark:text-white pb-2">32.4k</h5>
+                    </div>
+                    <div
+                        class="flex items-center px-2.5 py-0.5 text-base font-semibold text-green-500 dark:text-green-500 text-center">
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div id="area-chart"></div>
+                </div>
+                <div
+                    class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
+                    <div class="flex justify-between items-center pt-5">
+                        <!-- Button -->
+
+                        <!-- Dropdown menu -->
+                        <div id="lastDaysdropdown"
+                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                                aria-labelledby="dropdownDefaultButton">
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Yesterday</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Today</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last
+                                        7 days</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last
+                                        30 days</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last
+                                        90 days</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+        </section>
+    </div>
+
+    <%- include('components/html-tail.ejs') %>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+
+        <script>
+            // Define chart options
+            const options = {
+                chart: {
+                    height: "100%",
+                    maxWidth: "100%",
+                    type: "area",
+                    fontFamily: "Inter, sans-serif",
+                    dropShadow: {
+                        enabled: false,
+                    },
+                    toolbar: {
+                        show: false,
+                    },
+                },
+                tooltip: {
+                    enabled: true,
+                    x: {
+                        show: false,
+                    },
+                    y: {
+                        formatter: function (val) {
+                            return val;
+                        },
+                    },
+                },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        opacityFrom: 0.55,
+                        opacityTo: 0,
+                        shade: "#1C64F2",
+                        gradientToColors: ["#1C64F2"],
+                    },
+                },
+                dataLabels: {
+                    enabled: false,
+                },
+                stroke: {
+                    width: 6,
+                },
+                grid: {
+                    show: false,
+                    strokeDashArray: 4,
+                    padding: {
+                        left: 2,
+                        right: 2,
+                        top: 0
+                    },
+                },
+                series: [
+                    {
+                        name: "New users",
+                        data: [], // Initially empty
+                        color: "#1A56DB",
+                    },
+                ],
+                xaxis: {
+                    categories: [], // Initially empty
+                    labels: {
+                        show: false,
+                    },
+                    axisBorder: {
+                        show: false,
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                },
+                yaxis: {
+                    show: false,
+                },
+            };
+
+            // Create and render the chart
+            let chart;
+            if (document.getElementById("area-chart") && typeof ApexCharts !== 'undefined') {
+                chart = new ApexCharts(document.getElementById("area-chart"), options);
+                chart.render();
+            }
+
+            // Function to update the chart
+            function updateChart(newData) {
+                const categories = [
+                    '', '', '', '', '', '', ''
+                ]; // Example categories
+                const seriesData = options.series[0].data;
+                const maxDataPoints = 7; // Number of data points to show
+
+                if (seriesData.length >= maxDataPoints) {
+                    seriesData.shift(); // Remove the oldest data point
+                    categories.shift(); // Remove the oldest category
+                }
+
+                seriesData.push(newData);
+                categories.push(new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })); // Add new category
+
+                chart.updateOptions({
+                    xaxis: {
+                        categories: categories,
+                    },
+                    series: [{
+                        data: seriesData,
+                    }],
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const cookies = localStorage.getItem('cookies');
+
+                async function fetchUserDetails(cookies) {
+                    try {
+                        const response = await fetch('/fetch-user-details', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                cookies: cookies
+                            })
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Error fetching details: ${response.status}`);
+                        }
+
+                        return await response.text();
+                    } catch (error) {
+                        console.error('Error fetching user details:', error);
+                        return null;
+                    }
+                }
+
+                async function updateSubscriberCount() {
+                    const data = await fetchUserDetails(cookies);
+                    const subscriberCountElement = document.getElementById('subscriber-count');
+                    const subscriberCountElement2 = document.getElementById('subscriber-count2');
+
+                    if (data) {
+                        subscriberCountElement.textContent = data;
+                        subscriberCountElement2.textContent = data;
+
+
+                        // Assuming 'data' is the new subscriber count
+                        updateChart(parseInt(data, 10)); // Convert to integer and update the chart
+                    } else {
+                        subscriberCountElement.textContent = 'Error loading data';
+                    }
+                }
+
+                // Initial call to set the subscriber count immediately
+                updateSubscriberCount();
+
+                // Set interval to call the function every 5 seconds
+                setInterval(updateSubscriberCount, 5000);
+            });
+        </script>
